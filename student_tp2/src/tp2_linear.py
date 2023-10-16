@@ -4,9 +4,6 @@ import datetime
 from tqdm import tqdm
 
 
-# TODO:
-
-
 # Regression lineaire
 
 # Les données supervisées
