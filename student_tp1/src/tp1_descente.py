@@ -14,9 +14,10 @@ b = torch.randn(3)
 
 epsilon = 0.05
 
-writer = SummaryWriter("runs/runs"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+writer = SummaryWriter(
+    "runs/runs"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
 for n_iter in range(100):
-    ##  TODO:  Calcul du forward (loss)
+    # TODO:  Calcul du forward (loss)
     ctx_lin = Context()
     yhat = Linear.forward(ctx_lin, w, x, b)
 
@@ -31,15 +32,15 @@ for n_iter in range(100):
     # Sortie directe
     print(f"Itérations {n_iter}: loss {loss}")
 
-    ##  TODO:  Calcul du backward (grad_w, grad_b)
-    grad_output = torch.ones(1) #gradient de Id?
+    # TODO:  Calcul du backward (grad_w, grad_b)
+    grad_output = torch.ones(1)  # gradient de Id?
     dyhat, _ = MSE.backward(ctx_mse, grad_output)
     dw, _, db = Linear.backward(ctx_lin, dyhat)
 
-    ##  TODO:  Mise à jour des paramètres du modèle
+    # TODO:  Mise à jour des paramètres du modèle
     w -= epsilon*dw
     b -= epsilon*db
 
-#visusalisation
-#tensorboard --logdir runs/
-#depuis student_tp1
+# visusalisation
+# tensorboard --logdir runs/
+# depuis student_tp1
