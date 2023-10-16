@@ -20,6 +20,7 @@ b = torch.randn(y.size(1), requires_grad=True)
 
 for i in range(100):
     yhat = torch.mm(x, w) + b
+
     mse = torch.mean((yhat-y)**2)
 
     writer.add_scalar('loss/train', mse, i)
