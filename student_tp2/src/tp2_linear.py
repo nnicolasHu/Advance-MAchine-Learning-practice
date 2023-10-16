@@ -4,7 +4,7 @@ import datetime
 from tqdm import tqdm
 
 
-# TODO: 
+
 
 
 ## Regression lineaire
