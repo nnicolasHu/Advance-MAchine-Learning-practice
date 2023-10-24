@@ -54,6 +54,16 @@ class TextDataset(Dataset):
 
 def pad_collate_fn(samples: List[List[int]]):
     #  TODO:  Renvoie un batch à partir d'une liste de listes d'indexes (de phrases) qu'il faut padder.
+    length = max([len(s) for s in samples])
+    res = torch.full((length+1, len(samples)), PAD_IX)
+    
+    for (i, seq) in enumerate(samples):
+        end = len(seq)
+        res[:end, i] = samples[i][ :end]
+        res[end, i] = EOS_IX
+    
+    #res[-1, :] = EOS_IX * torch.ones(i+1)
+    return res
 
 
 if __name__ == "__main__":
@@ -63,6 +73,8 @@ if __name__ == "__main__":
     data = next(iter(loader))
     print("Chaîne à code : ", test)
     # Longueur maximum
+    print(data.shape)
+    print(data)
     assert data.shape == (7, 3)
     print("Shape ok")
     # e dans les deux cas
