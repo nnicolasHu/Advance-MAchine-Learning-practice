@@ -15,9 +15,6 @@ DIM_INPUT = 2
 #Taille du batch
 BATCH_SIZE = 32
 
-# Learning rate
-eps = 0.005
-
 PATH = "../data/"
 
 
