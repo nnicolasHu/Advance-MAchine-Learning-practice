@@ -51,18 +51,10 @@ for epoch in tqdm(range(NB_EPOCH)):
         target = torch.flatten(y, start_dim=2)
         target = torch.permute(target,(1,0,2)) # LENGTH x BATCH_SIZE x DIM_DATA
 
-        h_old = rnn.forward(input)
+        h_all = rnn.forward(input)
+        yhat = rnn.decode(h_all)
 
-        list_h_new = [h_old[-1]]
-        list_yhat = [rnn.decode(h_old[-1])]
-
-        for i in range(1, LENGTH-1):
-            list_h_new.append(rnn.one_step(list_yhat[-1], list_h_new[-1]))
-            list_yhat.append(rnn.decode(list_h_new[-1]))
-        
-        yhat = torch.stack(list_yhat, dim=0)
-
-        loss = mse_loss(yhat, target)/(X.size(0)) #*(LENGTH-1))
+        loss = mse_loss(yhat, target)/(X.size(0)*(LENGTH-1)) #*(LENGTH-1))
         loss.backward()
 
         writer.add_scalar('lossRNN/train', loss, epoch*len(data_train) + compteur)
@@ -79,18 +71,10 @@ for epoch in tqdm(range(NB_EPOCH)):
             target = torch.flatten(y, start_dim=2)
             target = torch.permute(target,(1,0,2))
 
-            h_old = rnn.forward(input)
+            h_all = rnn.forward(input)
+            yhat = rnn.decode(h_all)
 
-            list_h_new = [h_old[-1]]
-            list_yhat = [rnn.decode(h_old[-1])]
-
-            for i in range(1, LENGTH-1):
-                list_h_new.append(rnn.one_step(list_yhat[-1], list_h_new[-1]))
-                list_yhat.append(rnn.decode(list_h_new[-1]))
-            
-            yhat = torch.stack(list_yhat, dim=0)
-
-            loss = mse_loss(yhat, target)/(X.size(0)) #*(LENGTH-1))
+            loss = mse_loss(yhat, target)/(X.size(0)*(LENGTH-1)) #*(LENGTH-1))
             loss_test.append(loss)
         
         loss_test = torch.stack(loss_test, dim=0)
