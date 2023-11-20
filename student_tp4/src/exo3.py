@@ -53,8 +53,6 @@ for epoch in tqdm(range(NB_EPOCH)):
 
         h_all = rnn.forward(input)
         yhat = rnn.decode(h_all)
-        print(target.size(0))
-        print(target.size(1))
 
         loss = mse_loss(yhat, target)/(X.size(0)*(LENGTH-1))
         loss.backward()
