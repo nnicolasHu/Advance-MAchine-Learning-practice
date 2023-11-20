@@ -37,8 +37,8 @@ mse_loss = nn.MSELoss(reduction='sum')
 
 
 # Learning rate
-eps = 0.005
-NB_EPOCH = 150
+eps = 0.001
+NB_EPOCH = 500
 
 optim = torch.optim.SGD(params=rnn.parameters(),lr=eps)
 optim.zero_grad()
@@ -53,8 +53,10 @@ for epoch in tqdm(range(NB_EPOCH)):
 
         h_all = rnn.forward(input)
         yhat = rnn.decode(h_all)
+        print(target.size(0))
+        print(target.size(1))
 
-        loss = mse_loss(yhat, target)/(X.size(0)*(LENGTH-1)) #*(LENGTH-1))
+        loss = mse_loss(yhat, target)/(X.size(0)*(LENGTH-1))
         loss.backward()
 
         writer.add_scalar('lossRNN/train', loss, epoch*len(data_train) + compteur)
@@ -74,7 +76,7 @@ for epoch in tqdm(range(NB_EPOCH)):
             h_all = rnn.forward(input)
             yhat = rnn.decode(h_all)
 
-            loss = mse_loss(yhat, target)/(X.size(0)*(LENGTH-1)) #*(LENGTH-1))
+            loss = mse_loss(yhat, target)/(X.size(0)*(LENGTH-1))
             loss_test.append(loss)
         
         loss_test = torch.stack(loss_test, dim=0)

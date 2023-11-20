@@ -35,7 +35,7 @@ enthropy_loss = nn.CrossEntropyLoss()
 
 # Learning rate
 eps = 0.001
-NB_EPOCH = 150
+NB_EPOCH = 500
 
 optim = torch.optim.SGD(params=rnn.parameters(),lr=eps)
 optim.zero_grad()
