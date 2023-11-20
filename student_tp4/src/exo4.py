@@ -8,6 +8,7 @@ from torch.utils.data import Dataset,DataLoader
 
 from utils import RNN, device
 import datetime
+from tqdm import tqdm
 
 ## Liste des symboles autorisés
 LETTRES = string.ascii_letters + string.punctuation+string.digits+' '
@@ -89,13 +90,13 @@ model = RNN(lenF, latent, output)
 loss_fun = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
 
-for epoch in range(n_epochs):
+for epoch in tqdm(range(n_epochs)):
     compteur = 0
     for (X, y) in data_trump:
         #print(X.shape, y.shape)
         X_one_hot = embedding(X, lenD)
         X_emb = emb_linear(X_one_hot)
-        H = model.forward(X_emb, torch.zeros(BATCH_SIZE, latent))
+        H = model.forward(X_emb)
         yhat = model.decode(H)
         yhat = torch.permute(yhat, (1,2,0))
         loss = loss_fun(yhat, y)
