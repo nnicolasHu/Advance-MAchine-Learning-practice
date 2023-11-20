@@ -15,6 +15,7 @@ DIM_INPUT = 2
 #Taille du batch
 BATCH_SIZE = 32
 
+latent_dim = 20
 PATH = "../data/"
 
 
@@ -28,13 +29,12 @@ data_test = DataLoader(ds_test, batch_size=BATCH_SIZE,shuffle=False)
 #  TODO:  Question 2 : prédiction de la ville correspondant à une séquence
 writer = SummaryWriter("runs/Hangzhou2/runs"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
 
-latent_dim = 10
-rnn = RNN(DIM_INPUT, latent_dim , CLASSES)
+rnn = RNN(DIM_INPUT, latent_dim, CLASSES)
 enthropy_loss = nn.CrossEntropyLoss()
 
 
 # Learning rate
-eps = 0.005
+eps = 0.001
 NB_EPOCH = 150
 
 optim = torch.optim.SGD(params=rnn.parameters(),lr=eps)
