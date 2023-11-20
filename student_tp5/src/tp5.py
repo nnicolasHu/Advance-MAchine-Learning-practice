@@ -9,6 +9,7 @@ from generate import *
 
 #  TODO: 
 
+# Question 2
 def maskedCrossEntropy(output: torch.Tensor, target: torch.LongTensor, padcar: int):
     """
     :param output: Tenseur length x batch x output_dim,
@@ -16,7 +17,13 @@ def maskedCrossEntropy(output: torch.Tensor, target: torch.LongTensor, padcar: i
     :param padcar: index du caractere de padding
     """
     #  TODO:  Implémenter maskedCrossEntropy sans aucune boucle, la CrossEntropy qui ne prend pas en compte les caractères de padding.
-
+    mask = (target != padcar)
+    output = output.permute(1, 2, 0)
+    loss_fn = CrossEntropyLoss(reduction='none')
+    loss = loss_fn(output, target)
+    masked_loss = loss * mask
+    final_loss = masked_loss.sum() / mask.sum()
+    return final_loss
 
 class RNN(nn.Module):
     #  TODO:  Recopier l'implémentation du RNN (TP 4)

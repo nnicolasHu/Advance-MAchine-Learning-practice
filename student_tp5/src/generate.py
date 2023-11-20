@@ -14,7 +14,40 @@ def generate(rnn, emb, decoder, eos, start="", maxlen=200):
         * maxlen : longueur maximale
     """
 
-    #  TODO:  Implémentez la génération à partir du RNN, et d'une fonction decoder qui renvoie les logits (logarithme de probabilité à une constante près, i.e. ce qui vient avant le softmax) des différentes sorties possibles
+    #  TODO:  Implémentez la génération à partir du RNN, et d'une fonction decoder qui renvoie les logits
+    # (logarithme de probabilité à une constante près, i.e. ce qui vient avant le softmax) des différentes sorties possibles
+    rnn.eval()
+    with torch.no_grad():
+        if start:
+            input = string2code(start)
+            hidden = None  
+        else:
+            input = torch.zeros(1, dtype=torch.long)   
+            hidden = None
+        
+        generated_sequence = []
+
+        for _ in range(maxlen):
+            embedded_input = emb(input)
+            output, hidden = rnn(embedded_input, hidden)
+
+            logits = decoder(output)
+            probabilities = F.softmax(logits, dim=-1)
+
+            # For deterministic generation:
+            # next_char = probabilities.argmax(dim=-1)
+            # For random generationi:
+            next_char = torch.multinomial(probabilities, num_samples=1)
+
+            generated_sequence.append(next_char.item())
+
+            if next_char.item() == eos:
+                break
+
+            input = next_char
+
+        return ''.join(id2lettre[c] for c in generated_sequence)
+
 
 
 def generate_beam(rnn, emb, decoder, eos, k, start="", maxlen=200):
