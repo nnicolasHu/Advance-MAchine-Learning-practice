@@ -17,6 +17,7 @@ id2lettre = dict(zip(range(1,len(LETTRES)+1),LETTRES))
 id2lettre[0]='' ##NULL CHARACTER
 ## Dictionnaire lettre -> index
 lettre2id = dict(zip(id2lettre.values(),id2lettre.keys()))
+PATH = "../data/"
 
 def normalize(s):
     """ Nettoyage d'une chaîne de caractères. """
@@ -75,20 +76,20 @@ writer = SummaryWriter("runs/Trump/runs"+datetime.datetime.now().strftime("%Y%m%
 latent = 20
 BATCH_SIZE = 32
 LENGTH = 100
-PATH = "../data/"
+MAX_LEN = 50
 
-data_trump = DataLoader(TrumpDataset(open(PATH+"trump_full_speech.txt","rb").read().decode(),maxlen=1000), batch_size= BATCH_SIZE, shuffle=True)
+data_trump = DataLoader(TrumpDataset(open(PATH+"trump_full_speech.txt","rb").read().decode(),maxlen=MAX_LEN), batch_size= BATCH_SIZE, shuffle=True)
 
 lenD = len(lettre2id)
-output = lenD
 lenF = 50 #arbitrary choice: length of n' in the Embedding phase
+output = lenD
+eps = 0.001
+n_epochs = 30
 
-n_epochs = 500
-#emb = lambda X: embedding(X, lenD, lenF)
 emb_linear = nn.Linear(lenD, lenF)
 model = RNN(lenF, latent, output)
 loss_fun = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
+optimizer = torch.optim.SGD(model.parameters(), lr=eps)
 
 for epoch in tqdm(range(n_epochs)):
     compteur = 0
@@ -114,7 +115,7 @@ for epoch in tqdm(range(n_epochs)):
 
 
 len_generate = 20
-start = "Chi"
+start = "Hi"
 h = torch.zeros(1, latent)
 for char in start:
     one_hot = embedding(string2code(char).unsqueeze(0), lenD)
